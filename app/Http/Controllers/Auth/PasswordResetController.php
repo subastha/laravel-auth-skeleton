@@ -7,6 +7,8 @@ use App\Notifications\PasswordResetRequest;
 use App\Notifications\PasswordResetSuccess;
 use App\User;
 use App\PasswordReset;
+use App\Utilities\AuthUtil as Util;
+
 class PasswordResetController extends Controller
 {
     /**
@@ -29,13 +31,13 @@ class PasswordResetController extends Controller
             ['email' => $user->email],
             [
                 'email' => $user->email,
-                'token' => str_random(60)
+                'token' => Util::generateRandomString(60)
              ]
         );
         if ($user && $passwordReset)
-            $user->notify(
-                new PasswordResetRequest($passwordReset->token)
-            );
+            // $user->notify(
+            //     new PasswordResetRequest($passwordReset->token)
+            // );
         return response()->json([
             'message' => 'We have e-mailed your password reset link!'
         ]);
@@ -96,7 +98,7 @@ class PasswordResetController extends Controller
         $user->password = bcrypt($request->password);
         $user->save();
         $passwordReset->delete();
-        $user->notify(new PasswordResetSuccess($passwordReset));
+        // $user->notify(new PasswordResetSuccess($passwordReset));
         return response()->json($user);
     }
 }

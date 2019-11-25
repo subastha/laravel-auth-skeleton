@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\User;
 use App\Notifications\SignupActivate;
+use App\Utilities\AuthUtil as Util;
 
 class AuthController extends Controller
 {
@@ -28,10 +29,10 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'activation_token' => str_random(60)
+            'activation_token' => Util::generateRandomString(60)
         ]);
         $user->save();
-        $user->notify(new SignupActivate($user));
+        // $user->notify(new SignupActivate($user));
         return response()->json([
             'message' => 'Successfully created user!'
         ], 201);
@@ -113,4 +114,5 @@ class AuthController extends Controller
     {
         return response()->json($request->user());
     }
+
 }
