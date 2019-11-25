@@ -31,8 +31,8 @@ class AuthController extends Controller
             'password' => bcrypt($request->password),
             'activation_token' => Util::generateRandomString(60)
         ]);
+        $user->notify(new SignupActivate($user));
         $user->save();
-        // $user->notify(new SignupActivate($user));
         return response()->json([
             'message' => 'Successfully created user!'
         ], 201);

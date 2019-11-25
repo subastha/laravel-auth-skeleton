@@ -35,9 +35,9 @@ class PasswordResetController extends Controller
              ]
         );
         if ($user && $passwordReset)
-            // $user->notify(
-            //     new PasswordResetRequest($passwordReset->token)
-            // );
+            $user->notify(
+                new PasswordResetRequest($passwordReset->token)
+            );
         return response()->json([
             'message' => 'We have e-mailed your password reset link!'
         ]);
@@ -98,7 +98,7 @@ class PasswordResetController extends Controller
         $user->password = bcrypt($request->password);
         $user->save();
         $passwordReset->delete();
-        // $user->notify(new PasswordResetSuccess($passwordReset));
+        $user->notify(new PasswordResetSuccess($passwordReset));
         return response()->json($user);
     }
 }
